@@ -3,6 +3,7 @@ import TiptapEditor from "@/components/editor/TiptapEditor";
 import { useEffect, useState, useRef,} from "react";
 import { api } from "@/lib/api";
 import MediaLibraryModal from "@/components/articles/MediaLibraryModal";
+import { mediaUrl } from "@/lib/media";
 
 interface Category {
   id: string;
@@ -547,7 +548,7 @@ return (
     <div className="mt-6">
 
       <img
-        src={`http://localhost:3000${featuredImageUrl}`}
+	src={mediaUrl(featuredImageUrl)}
         alt="AI Generated"
         className="w-full rounded-lg border shadow"
       />

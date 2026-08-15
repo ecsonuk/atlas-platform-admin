@@ -1,4 +1,5 @@
 "use client";
+import { mediaUrl } from "@/lib/media";
 
 interface Props {
   open: boolean;
@@ -46,7 +47,7 @@ export default function MediaLibraryModal({
             >
 
               <img
-                src={`http://localhost:3000/${media.filePath}`}
+		src={mediaUrl(media.filePath)}
                 alt={media.title ?? media.originalName}
                 className="h-36 w-full rounded object-cover"
               />

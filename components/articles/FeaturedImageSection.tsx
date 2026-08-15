@@ -1,4 +1,5 @@
 "use client";
+import { mediaUrl } from "@/lib/media";
 
 interface Props {
   featuredImageUrl: string;
@@ -56,7 +57,7 @@ export default function FeaturedImageSection({
 
       {featuredImageUrl && (
         <img
-          src={`http://localhost:3000${featuredImageUrl}`}
+	  src={mediaUrl(featuredImageUrl)}
           alt="Featured"
           className="mt-4 w-full rounded-lg border"
         />
