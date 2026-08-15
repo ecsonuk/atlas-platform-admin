@@ -392,13 +392,13 @@ setFeaturedImageUrl(
 async function openMediaLibrary() {
   try {
 
-    const response = await api(
-      "/admin/media",
-      {
-        token:
-          localStorage.getItem("token") || "",
-      },
-    );
+const response = await api<{ data: any[] }>(
+  "/admin/media",
+  {
+    token:
+      localStorage.getItem("token") || "",
+  },
+);
 
     setMediaLibrary(
       response.data,
