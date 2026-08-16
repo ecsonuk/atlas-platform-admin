@@ -6,29 +6,36 @@ import Link from "next/link";
 
 export default function ArticlesPage() {
 
-  const [articles, setArticles] = useState<any[]>([]);
+const [articles, setArticles] = useState<any[]>([]);
+const [page, setPage] = useState(1);
+const [totalPages, setTotalPages] = useState(1);
+const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    loadArticles();
-  }, []);
+useEffect(() => {
+  loadArticles(page);
+}, [page]);
 
-  async function loadArticles() {
+async function loadArticles(currentPage: number) {
+  try {
+    setLoading(true);
 
-    try {
+    const response: any = await api(
+      `/admin/articles?page=${currentPage}&limit=10`,
+      {
+        token: localStorage.getItem("token") || "",
+      },
+    );
 
-      const response: any = await api(
-        "/admin/articles",
-        {
-          token: localStorage.getItem("token") || "",
-        },
-      );
-
-      setArticles(response.data.items);
-
-    } catch (err) {
-      console.error(err);
-    }
+    setArticles(response.data.items);
+    setTotalPages(
+      response.data.pagination?.totalPages ?? 1,
+    );
+  } catch (err) {
+    console.error(err);
+  } finally {
+    setLoading(false);
   }
+}
 
 async function deleteArticle(id: string) {
 
@@ -51,7 +58,7 @@ async function deleteArticle(id: string) {
     );
 
     alert("Article deleted successfully.");
-    loadArticles();
+	loadArticles(page);
   } catch (err: any) {
 
     alert(
@@ -182,6 +189,44 @@ async function deleteArticle(id: string) {
           </tbody>
 
         </table>
+
+{totalPages > 1 && (
+  <div className="mt-6 flex items-center justify-between border-t pt-4">
+
+    <button
+      type="button"
+      onClick={() =>
+        setPage((current) =>
+          Math.max(current - 1, 1),
+        )
+      }
+      disabled={page === 1 || loading}
+      className="rounded border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+    >
+      ← Previous
+    </button>
+
+    <span className="text-sm text-slate-600">
+      Page {page} of {totalPages}
+    </span>
+
+    <button
+      type="button"
+      onClick={() =>
+        setPage((current) =>
+          Math.min(current + 1, totalPages),
+        )
+      }
+      disabled={
+        page === totalPages || loading
+      }
+      className="rounded border border-slate-300 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-100 disabled:cursor-not-allowed disabled:opacity-40"
+    >
+      Next →
+    </button>
+
+  </div>
+)}
 
       </div>
 
